@@ -3,8 +3,9 @@
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import axios from "axios"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button"
 import {
   Form,
   FormControl,
@@ -13,10 +14,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "../../components/ui/form"
+import { Input } from "../../components/ui/input"
 
 import { ComboBox } from "../../components/custom/ComboBox"
+import toast from "react-hot-toast"
+import { useRouter } from "next/navigation"
+import React from "react"
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -39,6 +43,8 @@ interface CreateCourseFormProps {
 }
 
 const CreateCourseForm = ({ categories }: CreateCourseFormProps) => {
+  const router = useRouter()
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,10 +56,17 @@ const CreateCourseForm = ({ categories }: CreateCourseFormProps) => {
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values)
+    try {
+      const response = await axios.post(`/api/courses`, values)
+      router.push(`/instructor/courses/${response.data.id}/basic`)
+      toast.success("New Course Created!")
+    } catch (err) {
+      console.log("Failed to create new course", err)
+      toast.error("Can't create a new course!")
+    }
   }
 
   return (

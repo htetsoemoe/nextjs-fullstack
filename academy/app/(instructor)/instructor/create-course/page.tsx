@@ -1,6 +1,6 @@
 import React from 'react'
 import CreateCourseForm from '../../../../components/courses/CreateCourseForm'
-import { db } from '@/lib/db'
+import { db } from '../../../../lib/db'
 
 const CoursesPage = async () => {
   // Fetch 'categories' from database

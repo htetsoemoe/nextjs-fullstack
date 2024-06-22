@@ -15,7 +15,7 @@ datasource db {
 
 model Course {
   id           String  @id @default(uuid())
-  instructorid String
+  instructorId String
   title        String  @db.Text
   subtitle     String? @db.Text
   description  String? @db.Text
